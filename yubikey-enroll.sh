@@ -3,7 +3,7 @@
 # yubikey-enroll.sh
 #
 # Ce script réalise l’enrôlement d’une identité OpenZiti en utilisant une YubiKey comme HSM.
-# Il vérifie que le système est Linux (et de préférence Debian), que les outils requis sont installés,
+# Il vérifie que le système est Debian (doc Ziti Ubuntu/Debian), que les outils requis sont installés,
 # et propose d'installer les paquets manquants (ykman, pkcs11-tool, yubico-piv-tool, opensc).
 #
 # La documentation de référence pour l’utilisation d’une YubiKey avec OpenZiti est disponible ici :
@@ -12,10 +12,10 @@
 #   https://openziti.discourse.group/t/zdew-yubikey-support/2790/4
 #
 # Usage (exécuté en tant que root) :
-#   sudo ./enroll_ziti_yubikey.sh <nom_identité_base>
+#   sudo ./yubikey-enroll.sh <nom_identité_base>
 #
 # Exemple :
-#   sudo ./enroll_ziti_yubikey.sh monIdentiteZiti
+#   sudo ./yubikey-enroll.sh monIdentiteZiti
 #
 
 set -e
