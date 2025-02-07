@@ -66,7 +66,6 @@ check_command() {
 check_command "ykman" "yubikey-manager"
 check_command "pkcs11-tool" "opensc"
 check_command "ziti" "ziti"         # On suppose que le paquet s'appelle 'ziti' ou qu'il est sur le PATH
-check_command "ziti-tunnel" "ziti-tunnel"
 # Vérifier également yubico-piv-tool (pour obtenir le module PKCS#11)
 check_command "yubico-piv-tool" "yubico-piv-tool"
 
