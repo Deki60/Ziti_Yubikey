@@ -87,7 +87,16 @@ if [ ! -f "$DEFAULT_PKCS11_MODULE" ]; then
   fi
 fi
 
-# --- 1. Demande interactive des variables d'environnement ---
+# --- 1. Vérification de la présence d'une YubiKey ---
+
+echo "Recherche de YubiKey..."
+if ! ykman list | grep "YubiKey"; then
+  echo "Aucune YubiKey détectée. Assurez-vous que la YubiKey est branchée et réinitialisée aux paramètres d'usine."
+  exit 1
+fi
+echo "YubiKey détectée !"
+
+# --- 2. Demande interactive des variables d'environnement ---
 
 echo "=== Configuration de la connexion Ziti et HSM ==="
 # Lecture avec valeur par défaut
@@ -134,7 +143,7 @@ echo "HSM_LABEL: $HSM_LABEL"
 echo "-------------------------------"
 read -p "Confirmez ces informations et appuyez sur Entrée pour continuer..."
 
-# --- 2. Préparation du répertoire HSM ---
+# --- 3. Préparation du répertoire HSM ---
 
 echo "Création du répertoire HSM_DEST..."
 mkdir -p "$HSM_DEST" || { echo "Erreur lors de la création de $HSM_DEST"; exit 1; }
@@ -144,7 +153,7 @@ rm -rf "$HSM_NAME"
 mkdir -p "$HSM_NAME"
 cd "$HSM_NAME" || exit 1
 
-# --- 3. Connexion au contrôleur Ziti et création des identités ---
+# --- 4. Connexion au contrôleur Ziti et création des identités ---
 
 echo "Connexion au contrôleur Ziti..."
 ziti edge login "$ZITI_CTRL:$ZITI_PORT" -u "$ZITI_USER" -p "$ZITI_PWD"
@@ -166,15 +175,6 @@ if [ $? -ne 0 ]; then
   echo "Échec de la création de l'identité EC."
   exit 1
 fi
-
-# --- 4. Vérification de la présence d'une YubiKey ---
-
-echo "Recherche de YubiKey..."
-if ! ykman list | grep -qi "YubiKey"; then
-  echo "Aucune YubiKey détectée. Assurez-vous que la YubiKey est branchée et réinitialisée aux paramètres d'usine."
-  exit 1
-fi
-echo "YubiKey détectée !"
 
 # --- 5. Configuration de la YubiKey via pkcs11-tool (alias p) ---
 
