@@ -201,17 +201,17 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# --- 6. Enrôlement des identités via ziti-tunnel ---
+# --- 6. Enrôlement des identités via ziti edge enroll ---
 
-echo "Enrôlement de l'identité RSA via ziti-tunnel..."
-ziti-tunnel enroll -j "${HSM_DEST}/${RSA_ID}.jwt" -k "pkcs11://${PKCS11_MODULE}?id=${HSM_ID1}&pin=${HSM_PIN}" -v
+echo "Enrôlement de l'identité RSA via ziti edge..."
+ziti edge enroll "${HSM_DEST}/${RSA_ID}.jwt"
 if [ $? -ne 0 ]; then
   echo "Échec de l'enrôlement de l'identité RSA."
   exit 1
 fi
 
-echo "Enrôlement de l'identité EC via ziti-tunnel..."
-ziti-tunnel enroll -j "${HSM_DEST}/${EC_ID}.jwt" -k "pkcs11://${PKCS11_MODULE}?id=${HSM_ID2}&pin=${HSM_PIN}" -v
+echo "Enrôlement de l'identité EC via ziti edge..."
+ziti edge enroll "${HSM_DEST}/${EC_ID}.jwt"
 if [ $? -ne 0 ]; then
   echo "Échec de l'enrôlement de l'identité EC."
   exit 1
