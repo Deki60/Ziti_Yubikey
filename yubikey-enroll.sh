@@ -99,6 +99,7 @@ read_with_default() {
 }
 
 export ZITI_CTRL=$(read_with_default "Entrez le nom du contrôleur Ziti (adresse ou DNS, ex: local-edge-controller)" "local-edge-controller")
+export ZITI_PORT=$(read_with_default "Entrez le port du controleur" "defaut 1280")
 export ZITI_CTRL_CERT=$(read_with_default "Entrez le chemin complet vers le certificat du contrôleur" "/path/to/controller.cert")
 export ZITI_USER=$(read_with_default "Entrez le nom d'utilisateur Ziti" "myUserName")
 read -s -p "Entrez le mot de passe Ziti : " ZITI_PWD; echo
@@ -116,6 +117,7 @@ export HSM_LABEL=$(read_with_default "Entrez le label pour la YubiKey" "${HSM_NA
 
 echo "-------------------------------"
 echo "ZITI_CTRL: $ZITI_CTRL"
+echo "ZITI_PORT: $ZITI_PORT"
 echo "ZITI_CTRL_CERT: $ZITI_CTRL_CERT"
 echo "ZITI_USER: $ZITI_USER"
 echo "HSM_NAME: $HSM_NAME"
@@ -145,7 +147,7 @@ cd "$HSM_NAME" || exit 1
 # --- 3. Connexion au contrôleur Ziti et création des identités ---
 
 echo "Connexion au contrôleur Ziti..."
-ziti edge login "$ZITI_CTRL:1280" -u "$ZITI_USER" -p "$ZITI_PWD"
+ziti edge login "$ZITI_CTRL:$ZITI_PORT" -u "$ZITI_USER" -p "$ZITI_PWD"
 if [ $? -ne 0 ]; then
   echo "Échec de la connexion au contrôleur Ziti."
   exit 1
