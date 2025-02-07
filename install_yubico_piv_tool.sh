@@ -15,6 +15,7 @@
 #   - gengetopt (version 2.22.6 ou ultérieure)
 #   - help2man
 #   - zlib1g-dev
+#   - g++
 #
 # Ce script réalise les étapes suivantes :
 #   1. Vérifie que l'utilisateur est root.
@@ -37,8 +38,8 @@ fi
 
 # 2. Mettre à jour les paquets et installer les dépendances requises
 echo "Mise à jour de la liste des paquets et installation des dépendances..."
-apt-get update
-apt-get install -y cmake libtool libssl-dev pkg-config check libpcsclite-dev gengetopt help2man zlib1g-dev
+apt update
+apt install -y cmake libtool libssl-dev pkg-config check libpcsclite-dev gengetopt help2man zlib1g-dev g++
 
 # 3. Cloner le dépôt Git de yubico-piv-tool (si non présent)
 if [ ! -d "yubico-piv-tool" ]; then
