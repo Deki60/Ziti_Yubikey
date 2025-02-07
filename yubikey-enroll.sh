@@ -178,7 +178,7 @@ fi
 
 # --- 5. Configuration de la YubiKey via pkcs11-tool (alias p) ---
 
-alias p="pkcs11-tool --module $PKCS11_MODULE"
+p() { pkcs11-tool --module "$PKCS11_MODULE" "$@"; }
 
 echo "Initialisation du token sur la YubiKey..."
 p --init-token --label "ziti-test-token" --so-pin "$HSM_SOPIN"
