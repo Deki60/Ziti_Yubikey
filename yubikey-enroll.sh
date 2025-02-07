@@ -208,44 +208,5 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# --- 7. Vérification et configuration d'un service de test via ziti-tunnel proxy ---
-
-echo "Récupération de l'ID de l'Edge Router..."
-EDGE_ROUTER_ID=$(ziti edge list edge-routers | awk 'NR==2 {print $2}')
-if [ -z "$EDGE_ROUTER_ID" ]; then
-  echo "Impossible de récupérer l'ID de l'Edge Router. Vérifiez manuellement."
-  exit 1
-fi
-echo "EDGE_ROUTER_ID: $EDGE_ROUTER_ID"
-
-echo "Création de la configuration du tunneler (wttrconfig)..."
-ziti edge delete config wttrconfig 2>/dev/null || true
-ziti edge create config wttrconfig ziti-tunneler-client.v1 "{ \"hostname\" : \"localhost\", \"port\" : 9000 }"
-if [ $? -ne 0 ]; then
-  echo "Échec de la création de la configuration du tunneler."
-  exit 1
-fi
-
-echo "Création du service Ziti pour wttr.in..."
-ziti edge delete service wttr.ziti 2>/dev/null || true
-ziti edge create service wttr.ziti "$EDGE_ROUTER_ID" tcp://wttr.in:80 --configs wttrconfig
-if [ $? -ne 0 ]; then
-  echo "Échec de la création du service Ziti pour wttr.in."
-  exit 1
-fi
-
-echo "Démarrage du proxy via l'identité RSA..."
-ziti-tunnel proxy -i "${HSM_DEST}/${RSA_ID}.json" wttr.ziti:8000 -v &
-echo "Démarrage du proxy via l'identité EC..."
-ziti-tunnel proxy -i "${HSM_DEST}/${EC_ID}.json" wttr.ziti:9000 -v &
-sleep 5
-
-echo "Test de l'accès via le proxy RSA sur le port 8000..."
-curl -H "Host: wttr.in" http://localhost:8000
-echo ""
-echo "Test de l'accès via le proxy EC sur le port 9000..."
-curl -H "Host: wttr.in" http://localhost:9000
-echo ""
-
 echo "Enrôlement et configuration terminés avec succès."
 exit 0
