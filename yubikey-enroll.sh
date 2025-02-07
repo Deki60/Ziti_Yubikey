@@ -71,8 +71,8 @@ check_command "yubico-piv-tool" "yubico-piv-tool"
 
 # Vérifier que le module libykcs11.so existe à un emplacement connu
 # Par défaut, nous utiliserons le chemin de compilation suggéré dans la doc.
-DEFAULT_HSM_ROOT="/path/to/yubico-piv-tool-2.0.0"
-DEFAULT_PKCS11_MODULE="${DEFAULT_HSM_ROOT}/ykcs11/.libs/libykcs11.so"
+DEFAULT_HSM_ROOT="/usr/local/lib/"
+DEFAULT_PKCS11_MODULE="${DEFAULT_HSM_ROOT}libykcs11.so"
 if [ ! -f "$DEFAULT_PKCS11_MODULE" ]; then
   echo "Le module PKCS#11 (libykcs11.so) n'a pas été trouvé à l'emplacement par défaut :"
   echo "$DEFAULT_PKCS11_MODULE"
