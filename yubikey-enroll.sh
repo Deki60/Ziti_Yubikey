@@ -22,18 +22,26 @@ set -e
 
 # --- 0. Vérifications système préliminaires ---
 
-# Vérifier que le système est Linux
-if [[ "$(uname -s)" != "Debian" ]]; then
-  echo "Ce script fonctionne uniquement sur Debian."
-  exit 1
-fi
-
-# Vérifier que le fichier /etc/debian_version existe (optionnel : pour s'assurer que c'est Debian/Ubuntu)
-if [ ! -f /etc/debian_version ]; then
-  echo "Attention : ce script est conçu pour Debian ou dérivés (Ubuntu, etc.)."
-  read -p "Voulez-vous continuer malgré tout ? [y/N]: " answer
-  if [[ ! "$answer" =~ ^[Yy] ]]; then
-    exit 1
+# Vérifier que le système est Debian en utilisant /etc/os-release
+if [ -f /etc/os-release ]; then
+  # Charger le fichier pour avoir accès aux variables (ex: ID)
+  . /etc/os-release
+  if [ "$ID" != "debian" ]; then
+    echo "Ce script fonctionne uniquement sur Debian (Bookworm)."
+    read -p "Voulez-vous continuer malgré tout ? [y/N]: " answer
+    if [[ ! "$answer" =~ ^[Yy] ]]; then
+      exit 1
+    fi
+  fi
+else
+  echo "/etc/os-release n'existe pas. Impossible de vérifier la distribution."
+  # Vérifier en complément l'existence de /etc/debian_version
+  if [ ! -f /etc/debian_version ]; then
+    echo "Ce script est conçu pour Debian ou ses dérivés (Ubuntu, etc.)."
+    read -p "Voulez-vous continuer malgré tout ? [y/N]: " answer
+    if [[ ! "$answer" =~ ^[Yy] ]]; then
+      exit 1
+    fi
   fi
 fi
 
