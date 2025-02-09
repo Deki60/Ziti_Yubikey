@@ -183,10 +183,20 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# --- 6. Enrôlement des identités via ziti edge enroll ---
+# --- 6. Enrôlement des identités via ziti tunnel enroll ---
 
-echo "Enrôlement de l'identité EC via ziti edge..."
-ziti-edge-tunnel enroll "${HSM_DEST}/${EC_ID}.jwt"
+echo "Enrôlement de l'identité EC via ziti edge tunnel..."
+
+# Faire une copie du JWT original avant transformation en JSON
+cp "${HSM_DEST}/${EC_ID}.jwt" "${HSM_DEST}/${EC_ID}.jwt.bak"
+if [ $? -ne 0 ]; then
+  echo "Échec de la copie du JWT original."
+  exit 1
+fi
+echo "Copie du JWT sauvegardée sous ${HSM_DEST}/${EC_ID}.jwt.bak"
+
+# Enrôler l'identité avec ziti-edge-tunnel qui va transformer le JWT en JSON
+./ziti-edge-tunnel enroll "${HSM_DEST}/${EC_ID}.jwt"
 if [ $? -ne 0 ]; then
   echo "Échec de l'enrôlement de l'identité EC."
   exit 1
