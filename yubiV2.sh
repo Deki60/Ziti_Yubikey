@@ -186,7 +186,7 @@ fi
 # --- 6. Enrôlement des identités via ziti edge enroll ---
 
 echo "Enrôlement de l'identité EC via ziti edge..."
-ziti edge enroll "${HSM_DEST}/${EC_ID}.jwt"
+ziti-edge-tunnel enroll "${HSM_DEST}/${EC_ID}.jwt"
 if [ $? -ne 0 ]; then
   echo "Échec de l'enrôlement de l'identité EC."
   exit 1
